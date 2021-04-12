@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config()
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 const port = process.env.PORT || 5050;
 console.log(process.env.DB_USER);
 
@@ -26,7 +27,6 @@ client.connect(err => {
     productCollection.find()
     .toArray((err, item) => {
       res.send(item)
-      console.log('from database', item)
     })
   })
 
@@ -37,6 +37,16 @@ client.connect(err => {
     .then(result => {
       console.log('inserted count: ',result.insertedCount)
       res.send(result.insertedCount > 0)
+    })
+  })
+
+  app.delete('deleteProduct/:id', (req, res) => {
+    const id = ObjectID(req.params.id);
+    console.log('delete this', id);
+    productCollection.findOneAndDelete({_id: id})
+    .then(documents => {
+      console.log(documents)
+      res.send(!!documents.value)
     })
   })
   
