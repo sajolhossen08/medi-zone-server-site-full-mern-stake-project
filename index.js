@@ -40,13 +40,11 @@ client.connect(err => {
     })
   })
 
-  app.delete('deleteProduct/:id', (req, res) => {
-    const id = ObjectID(req.params.id);
-    console.log('delete this', id);
-    productCollection.findOneAndDelete({_id: id})
-    .then(documents => {
-      console.log(documents)
-      res.send(!!documents.value)
+  app.delete('/productDelete/:id', (req, res) =>{
+    const id = req.params.id;
+    productCollection.deleteOne({_id: ObjectID(id)})
+    .then(result => {
+        res.send({count: result.deletedCount})
     })
   })
   
