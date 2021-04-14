@@ -47,6 +47,15 @@ client.connect(err => {
         res.send({count: result.deletedCount})
     })
   })
+
+  app.get('/products/:id', (req, res) => {
+    const productId = req.params.id;
+    productCollection.find({_id: ObjectID(productId)})
+    .toArray((err, result) => {
+      console.log(err);
+      res.send(result);
+    })
+  })
   
   console.log('Database connected successfully')
 });
